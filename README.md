@@ -16,7 +16,7 @@ A Blueprint's job ends at "here are the work items, sequenced, ready to be picke
 
 ```
 <project-slug>/
-  <timestamp>-<packet-id>/
+  <timestamp>-<blueprint-id>/
 ```
 
 One folder per project (matching how specs already work in this ecosystem), timestamp-first inside it so a project's Blueprints sort chronologically - migration-style. See `blueprint-spec.md` (linked above) for the full structure inside each one.
