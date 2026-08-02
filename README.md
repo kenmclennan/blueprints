@@ -6,11 +6,11 @@ Exported Blueprints - self-contained, browsable packages that hold a design and 
 
 ## What a Blueprint is
 
-A Blueprint supersedes what earlier design docs in this ecosystem called a "Design Packet" - it's a Design Packet (the nine-category design content: user stories, wireframes, design system, architecture, user flows, api contracts, quality attributes, domain model, glossary) plus the delivery plan decomposed from it, unified into one immutable snapshot. Every work item traces back to the story that motivated it via ordinary links inside the same bundle - no dead references, nothing to duplicate, because everything the plan cites is already sitting right there.
+A Blueprint supersedes what earlier design docs in this ecosystem called a "Design Packet" - it's the nine-category design content (user stories, wireframes, design system, architecture, user flows, api contracts, quality attributes, domain model, glossary) plus the delivery plan decomposed from it, unified into one immutable snapshot. Every work item traces back to the story that motivated it via ordinary links inside the same bundle - no dead references, nothing to duplicate, because everything the plan cites is already sitting right there.
 
 A Blueprint's job ends at "here are the work items, sequenced, ready to be picked up." What happens after that - specs, code, review - belongs to whatever build pipeline picks the work up, not to this repo.
 
-**The format itself is still being finalised.** The authoritative spec currently lives as `design-packet-spec.md` in [`flynns-arcade`](https://github.com/kenmclennan/flynns-arcade) - the design half of what a Blueprint contains - and hasn't yet been updated for the unified (design + plan) shape this repo is named for. Treat this repo as empty and provisional until that catches up.
+**The authoritative definition is [`blueprint-spec.md`](https://github.com/kenmclennan/flynns-arcade/blob/design-packet-spec/plugins/planning/blueprint-spec.md) in [`flynns-arcade`](https://github.com/kenmclennan/flynns-arcade).** This structure is a core piece of the design, not an implementation detail - read it before writing anything against this repo. Currently on the `design-packet-spec` branch, not yet merged to `main` - update this link once it is. The design side is settled; the plan side (work items, `delivers` lineage, milestones) is explicitly marked provisional there, reflecting a decision made but not yet exercised against a real Blueprint. Treat this repo as empty until that's had a real run.
 
 ## Layout
 
@@ -19,7 +19,7 @@ A Blueprint's job ends at "here are the work items, sequenced, ready to be picke
   <timestamp>-<packet-id>/
 ```
 
-One folder per project (matching how specs already work in this ecosystem), timestamp-first inside it so a project's Blueprints sort chronologically - migration-style. See the spec (once it reflects the Blueprint rename) for the full structure inside each one.
+One folder per project (matching how specs already work in this ecosystem), timestamp-first inside it so a project's Blueprints sort chronologically - migration-style. See `blueprint-spec.md` (linked above) for the full structure inside each one.
 
 ## What does not belong here
 
