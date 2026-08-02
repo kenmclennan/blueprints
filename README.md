@@ -10,7 +10,7 @@ A Blueprint supersedes what earlier design docs in this ecosystem called a "Desi
 
 A Blueprint's job ends at "here are the work items, sequenced, ready to be picked up." What happens after that - specs, code, review - belongs to whatever build pipeline picks the work up, not to this repo.
 
-**The authoritative definition is [`blueprint-spec.md`](https://github.com/kenmclennan/flynns-arcade/blob/design-packet-spec/plugins/planning/blueprint-spec.md) in [`flynns-arcade`](https://github.com/kenmclennan/flynns-arcade).** This structure is a core piece of the design, not an implementation detail - read it before writing anything against this repo. Currently on the `design-packet-spec` branch, not yet merged to `main` - update this link once it is. The design side is settled; the plan side (work items, `delivers` lineage, milestones) is explicitly marked provisional there, reflecting a decision made but not yet exercised against a real Blueprint. Treat this repo as empty until that's had a real run.
+**The authoritative definition is [`blueprint-spec.md`](https://github.com/kenmclennan/flynns-arcade/blob/main/plugins/planning/blueprint-spec.md) in [`flynns-arcade`](https://github.com/kenmclennan/flynns-arcade).** This structure is a core piece of the design, not an implementation detail - read it before writing anything against this repo. The design side is settled; the plan side (work items, `delivers` lineage, milestones) is explicitly marked provisional there, reflecting a decision made but not yet exercised against a real Blueprint. Treat this repo as empty until that's had a real run.
 
 ## Layout
 
