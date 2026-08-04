@@ -1,0 +1,278 @@
+<title>Wireframe — Priority List</title>
+<style>
+  :root {
+    --bg: #0c0c0f;
+    --panel: #101014;
+    --border: #3a3a42;
+    --text: #d8d8dc;
+    --dim: #6e6e78;
+    --cyan: #5fd7e0;
+    --amber: #e0a95f;
+    --red: #e05f6b;
+    --selected-bg: #1c2a2c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: #050506;
+    color: var(--text);
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    margin: 0;
+    padding: 40px 20px;
+  }
+  .caption {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    font-size: 13px;
+    color: #9a9aa4;
+    line-height: 1.6;
+  }
+  .caption b { color: #d8d8dc; }
+  .caption .flag { color: var(--amber); }
+  .label-row {
+    width: 860px;
+    max-width: 100%;
+    margin: 24px auto 6px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .term {
+    width: 860px;
+    max-width: 100%;
+    margin: 0 auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: auto;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 2ch 4ch 9ch 10ch 1fr 16ch 8ch;
+    column-gap: 1.5ch;
+    padding: 5px 2ch;
+    align-items: start;
+  }
+  .row.selected { background: var(--selected-bg); }
+  .cursor { color: var(--cyan); }
+  .icon.attn { color: var(--red); }
+  .icon.dep { color: var(--amber); }
+  .icon.active { color: var(--cyan); }
+  .icon.queued { color: var(--dim); }
+  .id { color: var(--text); }
+  .title { color: var(--text); overflow-wrap: break-word; }
+  .project { color: var(--dim); }
+  .project.tagged { color: var(--cyan); }
+  .step { color: var(--dim); text-align: left; }
+  .step.blocked { color: var(--amber); }
+  .time { color: var(--dim); text-align: right; }
+  .gap { height: 14px; }
+  .tabs-top {
+    padding: 8px 2ch;
+    border-bottom: 1px solid var(--border);
+    color: var(--dim);
+  }
+  .tabs-top .active { color: var(--cyan); font-weight: 600; }
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 6px 2ch;
+    color: var(--dim);
+    font-size: 13px;
+  }
+  .footer .status { display: flex; justify-content: space-between; }
+  .footer .status .pool { color: var(--cyan); }
+  .footer .status .claude-ok { color: var(--cyan); }
+  .footer .status .claude-down { color: var(--red); }
+  .footer .status .upgrade { color: var(--amber); }
+  .footer .keys { margin-top: 4px; }
+  .footer .keys kbd {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .pad { padding: 10px 2ch 4px; }
+
+  .empty-state {
+    padding: 40px 2ch 44px;
+    text-align: center;
+    color: var(--dim);
+  }
+  .empty-state .msg { color: var(--dim); }
+</style>
+
+<p class="caption">
+  <b>Priority List</b> — the landing screen. Sorted: needs-attention (with an extra ⛓ icon when the
+  reason is a dependency) at top, active with elapsed time next, queued last. One continuous list, no
+  panel dividers — grouping reads from icon/colour + a small gap, not section headers. Bottom two lines
+  are the persistent footer (pool/claude/version/upgrade status, then contextual shortcuts) present on
+  every screen. <b>❯</b> marks the current selection.<br>
+  Row content is real ids/titles/steps pulled from the live store (the pool is quiet right now - nothing
+  is genuinely active/blocked at the moment - so this is a representative arrangement of real work, not
+  a live snapshot). Each row now also shows its owning project (blank when unscoped), same treatment as
+  the Backlog's own project column.<br>
+  <span class="flag">New:</span> the footer's claude-availability indicator (third state below shows it
+  tripped) reflects the pool's circuit breaker - default "available"; when Claude itself has rejected a
+  worker (usage limits or similar), the breaker opens, kills in-flight workers, and the footer shows
+  "unavailable" with the time it'll next probe for recovery.<br>
+  Second state below: nothing in any bucket - needs-attention, active, or queued - all at once. A calm
+  message replaces the list rather than a blank pane, the same instinct as the Backlog's own empty state.
+</p>
+
+<div class="label-row" id="normal">Priority List — normal state</div>
+<div class="term">
+  <div class="tabs-top"><span class="active">Current work</span> &nbsp;·&nbsp; Backlog</div>
+  <div class="pad"></div>
+
+  <div class="row selected">
+    <span class="cursor">❯</span>
+    <span class="icon attn">●</span>
+    <span class="id">LC-143.4</span>
+    <span class="project tagged">lightcycle</span>
+    <span class="title">lc project scan detects repo roots, not inside-a-repo (ph3 fix)</span>
+    <span class="step blocked">code-await-merge</span>
+    <span class="time"></span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="icon attn">●⛓</span>
+    <span class="id">LC-72</span>
+    <span class="project tagged">lightcycle</span>
+    <span class="title">Same-item spec-to-build transition: one id for the whole arc</span>
+    <span class="step blocked">blocked · LC-54.4</span>
+    <span class="time"></span>
+  </div>
+
+  <div class="gap"></div>
+
+  <div class="row">
+    <span></span>
+    <span class="icon active">▸</span>
+    <span class="id">LC-143.3</span>
+    <span class="project tagged">lightcycle</span>
+    <span class="title">lc project scan: recursive discovery by git remote</span>
+    <span class="step">write-code</span>
+    <span class="time">14m</span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="icon active">▸</span>
+    <span class="id">LC-141</span>
+    <span class="project tagged">lightcycle</span>
+    <span class="title">Project model: central shortcode map + repos anywhere</span>
+    <span class="step">review-code</span>
+    <span class="time">45s</span>
+  </div>
+
+  <div class="gap"></div>
+
+  <div class="row">
+    <span></span>
+    <span class="icon queued">○</span>
+    <span class="id">LC-143.2</span>
+    <span class="project tagged">lightcycle</span>
+    <span class="title">Clone-on-demand: fetch an absent project on resolve</span>
+    <span class="step">code-open-pr</span>
+    <span class="time"></span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="icon queued">○</span>
+    <span class="id">LC-143.1</span>
+    <span class="project tagged">lightcycle</span>
+    <span class="title">Registry table + identity-based repo resolution + migration</span>
+    <span class="step">watch-ci</span>
+    <span class="time"></span>
+  </div>
+
+  <div class="pad"></div>
+
+  <div class="footer">
+    <div class="status">
+      <span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span>
+      <span class="upgrade">⬆ v0.4.2 available</span>
+    </div>
+    <div class="keys">
+      <kbd>↑↓</kbd> move &nbsp; <kbd>enter/→</kbd> open &nbsp; <kbd>tab</kbd> backlog &nbsp;
+      <kbd>ctrl-u/ctrl-d</kbd> scroll &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="empty">Priority List — empty (nothing in any bucket)</div>
+<div class="term">
+  <div class="tabs-top"><span class="active">Current work</span> &nbsp;·&nbsp; Backlog</div>
+  <div class="pad"></div>
+
+  <div class="empty-state">
+    <div class="msg">Nothing needs attention. Nothing's active. Nothing's queued.</div>
+  </div>
+
+  <div class="footer">
+    <div class="status">
+      <span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span>
+      <span class="upgrade">⬆ v0.4.2 available</span>
+    </div>
+    <div class="keys">
+      <kbd>tab</kbd> backlog &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="claude-unavailable">Priority List — Claude unavailable (circuit breaker open)</div>
+<div class="term">
+  <div class="tabs-top"><span class="active">Current work</span> &nbsp;·&nbsp; Backlog</div>
+  <div class="pad"></div>
+
+  <div class="row selected">
+    <span class="cursor">❯</span>
+    <span class="icon attn">●</span>
+    <span class="id">LC-143.4</span>
+    <span class="project tagged">lightcycle</span>
+    <span class="title">lc project scan detects repo roots, not inside-a-repo (ph3 fix)</span>
+    <span class="step blocked">code-await-merge</span>
+    <span class="time"></span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="icon attn">●⛓</span>
+    <span class="id">LC-72</span>
+    <span class="project tagged">lightcycle</span>
+    <span class="title">Same-item spec-to-build transition: one id for the whole arc</span>
+    <span class="step blocked">blocked · LC-54.4</span>
+    <span class="time"></span>
+  </div>
+
+  <div class="gap"></div>
+
+  <div class="row">
+    <span></span>
+    <span class="icon queued">○</span>
+    <span class="id">LC-143.3</span>
+    <span class="project tagged">lightcycle</span>
+    <span class="title">lc project scan: recursive discovery by git remote</span>
+    <span class="step">write-code</span>
+    <span class="time"></span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="icon queued">○</span>
+    <span class="id">LC-141</span>
+    <span class="project tagged">lightcycle</span>
+    <span class="title">Project model: central shortcode map + repos anywhere</span>
+    <span class="step">review-code</span>
+    <span class="time"></span>
+  </div>
+
+  <div class="pad"></div>
+
+  <div class="footer">
+    <div class="status">
+      <span><span class="pool">● pool running</span> &nbsp; <span class="claude-down">⊘ claude unavailable · resumes 14:32:00</span> &nbsp; v0.4.1</span>
+      <span class="upgrade">⬆ v0.4.2 available</span>
+    </div>
+    <div class="keys">
+      <kbd>↑↓</kbd> move &nbsp; <kbd>enter/→</kbd> open &nbsp; <kbd>tab</kbd> backlog &nbsp;
+      <kbd>ctrl-u/ctrl-d</kbd> scroll &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
