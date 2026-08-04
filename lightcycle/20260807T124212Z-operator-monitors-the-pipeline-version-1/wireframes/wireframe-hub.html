@@ -1,0 +1,502 @@
+<title>Wireframe — Item / Node Hub (tabbed)</title>
+<style>
+  :root {
+    --bg: #0c0c0f;
+    --panel: #101014;
+    --border: #3a3a42;
+    --text: #d8d8dc;
+    --dim: #6e6e78;
+    --cyan: #5fd7e0;
+    --amber: #e0a95f;
+    --red: #e05f6b;
+    --selected-bg: #1c2a2c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: #050506;
+    color: var(--text);
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    margin: 0;
+    padding: 40px 20px;
+  }
+  .caption {
+    max-width: 900px;
+    margin: 0 auto 16px;
+    font-size: 13px;
+    color: #9a9aa4;
+    line-height: 1.6;
+  }
+  .caption b { color: #d8d8dc; }
+  .caption .note { color: var(--amber); }
+  .label-row {
+    width: 860px;
+    max-width: 100%;
+    margin: 24px auto 6px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .term {
+    width: 860px;
+    max-width: 100%;
+    margin: 0 auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: auto;
+  }
+  .id-row {
+    padding: 12px 2ch 4px;
+    color: var(--cyan);
+    font-weight: 600;
+  }
+  .title-row {
+    padding: 0 2ch 8px;
+    color: var(--text);
+  }
+  .meta-row {
+    padding: 0 2ch 4px;
+    color: var(--dim);
+  }
+  .desc-row {
+    padding: 8px 2ch;
+    color: var(--dim);
+    border-top: 1px solid var(--border);
+  }
+  .fieldset {
+    padding: 4px 2ch 10px;
+  }
+  .field {
+    display: grid;
+    grid-template-columns: 10ch 1fr;
+    column-gap: 1.5ch;
+    padding: 2px 0;
+  }
+  .field .k { color: var(--dim); }
+  .field .v { color: var(--text); }
+  .escalated {
+    padding: 8px 2ch;
+    background: color-mix(in srgb, var(--amber) 7%, transparent);
+    border-top: 1px solid var(--border);
+  }
+  .escalated .tag { color: var(--amber); font-weight: 600; margin-bottom: 4px; }
+  .escalated .why { color: var(--text); }
+  .escalated .why a { color: var(--cyan); }
+
+  .tabs {
+    display: flex;
+    gap: 3ch;
+    padding: 8px 2ch;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    color: var(--dim);
+  }
+  .tabs .tab.active { color: var(--cyan); font-weight: 600; }
+  .tabs .hint { margin-left: auto; color: var(--dim); font-size: 12px; }
+
+  .body { padding: 10px 2ch; min-height: 90px; }
+  .body .row { display: flex; padding: 3px 0; color: var(--text); }
+  .body .row .icon { width: 3ch; color: var(--dim); flex-shrink: 0; }
+  .body .row .nid { width: 11ch; color: var(--dim); flex-shrink: 0; }
+  .body .row .label { flex: 1; }
+  .body .row .role { color: var(--dim); margin-left: 1.5ch; white-space: nowrap; }
+  .body .row.current { background: var(--selected-bg); }
+  .body .row.current .nid { color: var(--cyan); }
+  .body .indent1 { padding-left: 3ch; }
+
+  .pinned-ancestor {
+    display: flex;
+    padding: 3px 0;
+    color: var(--text);
+    background: color-mix(in srgb, var(--border) 45%, transparent);
+    border-bottom: 1px solid var(--border);
+    margin: -10px -2ch 6px;
+    padding-left: 2ch;
+    padding-right: 2ch;
+  }
+  .pinned-ancestor .icon { width: 3ch; color: var(--dim); flex-shrink: 0; }
+  .pinned-ancestor .nid { width: 11ch; color: var(--dim); flex-shrink: 0; }
+  .pinned-ancestor .label { flex: 1; }
+
+  .log-line { color: var(--dim); }
+  .log-line.now { color: var(--text); }
+  .log-cursor { color: var(--cyan); }
+  .log-finished { color: var(--cyan); padding-top: 6px; }
+
+  .artifact-row { display: flex; padding: 3px 0; }
+  .artifact-row .atype { width: 10ch; color: var(--dim); }
+  .artifact-row .aval { color: var(--cyan); }
+
+  .pad { padding: 4px 2ch; }
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 6px 2ch;
+    color: var(--dim);
+    font-size: 13px;
+  }
+  .footer .status { display: flex; justify-content: space-between; }
+  .footer .status .pool { color: var(--cyan); }
+  .footer .status .claude-ok { color: var(--cyan); }
+  .footer .status .claude-down { color: var(--red); }
+  .footer .keys { margin-top: 4px; }
+  .footer .keys kbd { color: var(--text); font-weight: 600; }
+</style>
+
+<p class="caption">
+  <b>Item / Node Hub</b> — tabbed view any node (theme, item, or step) opens into. Header (id, title,
+  project, theme, workflow, description, step/role/elapsed, why-escalated) stays fixed above the tabs
+  regardless of which is active - description lives here, not as a fourth tab, since it's identity/context
+  like title and theme, not a destination like the other three. <kbd>[</kbd>/<kbd>]</kbd> cycle Hierarchy ↔
+  Log ↔ Artifacts - <b>Tab</b> keeps its global meaning (jump to Backlog) even while an item is open. All
+  ids, workflow refs, step numbers, and the description text below are real, pulled from the live store -
+  LC-143.4 and LC-72 genuinely have no description, so their headers omit that line rather than showing
+  it empty.<br>
+  <span class="note">Wireframe simplification:</span> in the Hierarchy examples, sibling items' own step
+  children are collapsed to a single line for length - real behaviour always fully expands every branch,
+  no exceptions.<br>
+  <span class="note">New:</span> every state now shows a <b>project:</b> field (this design's owning
+  registry entry, separate from theme - a node can have a project with or without a theme), and the
+  footer's claude-availability indicator, same treatment as the Priority List and Backlog. The final state
+  below shows what opening a node looks like once the breaker has tripped and killed its worker.<br>
+  Earlier states below cover the contextual-landing branches (active, needs-attention human step, blocked
+  dependency, done, theme), the ancestry-pinning behaviour once the hierarchy actually scrolls past a
+  parent, and a step finishing while its log is open.
+</p>
+
+<div class="label-row" id="active-log">Active item (LC-143.3) — lands on Log</div>
+<div class="term">
+  <div class="id-row">LC-143.3</div>
+  <div class="title-row">lc project scan: recursive discovery by git remote</div>
+  <div class="meta-row">project: lightcycle</div>
+  <div class="meta-row">theme: LC-143 · Project model: github-identity registry (hybrid)</div>
+  <div class="meta-row">workflow: lightcycle/spec-driven@abfb01d</div>
+  <div class="desc-row">Phase 3 of LC-143. lc project scan [dir] walks a tree recursively, reads each repo origin
+    remote for its owner/name identity, lists registration candidates with proposed shortcodes
+    (dry-run; nothing auto-registers). Builds on phase 1.</div>
+  <div class="fieldset">
+    <div class="field"><span class="k">STEP</span><span class="v">write-code</span></div>
+    <div class="field"><span class="k">ROLE</span><span class="v">write-code</span></div>
+    <div class="field"><span class="k">ELAPSED</span><span class="v">14m</span></div>
+  </div>
+
+  <div class="tabs">
+    <span class="tab">Hierarchy</span>
+    <span class="tab active">Log</span>
+    <span class="tab">Artifacts</span>
+    <span class="hint">[ / ]</span>
+  </div>
+
+  <div class="body">
+    <div class="log-line">14:02:11 reading lightcycle/adapters/sqlite_store.py</div>
+    <div class="log-line">14:02:14 adding project registry table migration</div>
+    <div class="log-line">14:03:02 writing tests/unit/test_project_registry.py</div>
+    <div class="log-line now">14:03:47 running fast tier... <span class="log-cursor">▌</span></div>
+  </div>
+
+  <div class="pad"></div>
+  <div class="footer">
+    <div class="status"><span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span></div>
+    <div class="keys">
+      <kbd>[/]</kbd> switch tab &nbsp; <kbd>↑↓</kbd> scroll &nbsp; <kbd>esc/←</kbd> back &nbsp; <kbd>tab</kbd> backlog &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="hierarchy">Same item (LC-143.3) — cycled to Hierarchy ([)</div>
+<div class="term">
+  <div class="id-row">LC-143.3</div>
+  <div class="title-row">lc project scan: recursive discovery by git remote</div>
+  <div class="meta-row">project: lightcycle</div>
+  <div class="meta-row">theme: LC-143 · Project model: github-identity registry (hybrid)</div>
+  <div class="meta-row">workflow: lightcycle/spec-driven@abfb01d</div>
+  <div class="desc-row">Phase 3 of LC-143. lc project scan [dir] walks a tree recursively, reads each repo origin
+    remote for its owner/name identity, lists registration candidates with proposed shortcodes
+    (dry-run; nothing auto-registers). Builds on phase 1.</div>
+  <div class="fieldset">
+    <div class="field"><span class="k">STEP</span><span class="v">write-code</span></div>
+    <div class="field"><span class="k">ROLE</span><span class="v">write-code</span></div>
+    <div class="field"><span class="k">ELAPSED</span><span class="v">14m</span></div>
+  </div>
+
+  <div class="tabs">
+    <span class="tab active">Hierarchy</span>
+    <span class="tab">Log</span>
+    <span class="tab">Artifacts</span>
+    <span class="hint">[ / ]</span>
+  </div>
+
+  <div class="body">
+    <div class="row"><span class="icon">○</span><span class="nid">LC-143</span><span class="label">Project model: github-identity registry (hybrid)</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.1</span><span class="label">Registry table + identity-based repo resolution + migration (8 steps)</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.2</span><span class="label">Clone-on-demand: fetch an absent project on resolve (8 steps)</span></div>
+    <div class="row indent1 current"><span class="icon">▸</span><span class="nid">LC-143.3</span><span class="label">lc project scan: recursive discovery by git remote</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.1</span><span class="label">spec-writer</span><span class="role">spec-writer</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.2</span><span class="label">spec-open-pr</span><span class="role">open-pr</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.3</span><span class="label">spec-await-merge</span><span class="role">human</span></div>
+    <div class="row indent1 current"><span class="icon">▸</span><span class="nid">LC-143.3.4</span><span class="label">write-code</span><span class="role">write-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.5</span><span class="label">code-open-pr</span><span class="role">open-pr</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.6</span><span class="label">watch-ci</span><span class="role">watch-ci</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.7</span><span class="label">review-code</span><span class="role">review-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.8</span><span class="label">code-await-merge</span><span class="role">human</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.4</span><span class="label">lc project scan detects repo roots, not inside-a-repo (ph3 fix) (8 steps)</span></div>
+  </div>
+
+  <div class="pad"></div>
+  <div class="footer">
+    <div class="status"><span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span></div>
+    <div class="keys">
+      <kbd>[/]</kbd> switch tab &nbsp; <kbd>↑↓</kbd> scroll &nbsp; <kbd>enter/→</kbd> open node &nbsp; <kbd>esc/←</kbd> back &nbsp; <kbd>tab</kbd> backlog &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="needs-attention-human">Needs-attention, human step (LC-143.4) — lands on Artifacts</div>
+<div class="term">
+  <div class="id-row">LC-143.4</div>
+  <div class="title-row">lc project scan detects repo roots, not inside-a-repo (ph3 fix)</div>
+  <div class="meta-row">project: lightcycle</div>
+  <div class="meta-row">theme: LC-143 · Project model: github-identity registry (hybrid)</div>
+  <div class="meta-row">workflow: lightcycle/spec-driven@88c62c8</div>
+  <div class="fieldset">
+    <div class="field"><span class="k">STEP</span><span class="v">code-await-merge</span></div>
+  </div>
+  <div class="escalated">
+    <div class="tag">⚠ needs you</div>
+    <div class="why">Waiting on you to merge <a href="#">PR #277</a></div>
+  </div>
+
+  <div class="tabs">
+    <span class="tab">Hierarchy</span>
+    <span class="tab">Log</span>
+    <span class="tab active">Artifacts</span>
+    <span class="hint">[ / ]</span>
+  </div>
+
+  <div class="body">
+    <div class="artifact-row"><span class="atype">repo</span><span class="aval">lightcycle</span></div>
+    <div class="artifact-row"><span class="atype">branch</span><span class="aval">feat/LC-143.4-spec-lc-project-scan-detects-repo-roots-not</span></div>
+    <div class="artifact-row"><span class="atype">pr (spec)</span><span class="aval">github.com/.../lightcycle-specs/pull/61</span></div>
+    <div class="artifact-row"><span class="atype">branch</span><span class="aval">feat/LC-143.4-code-lc-project-scan-detects-repo-roots-not</span></div>
+    <div class="artifact-row"><span class="atype">pr (code)</span><span class="aval">github.com/.../lightcycle/pull/277</span></div>
+  </div>
+
+  <div class="pad"></div>
+  <div class="footer">
+    <div class="status"><span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span></div>
+    <div class="keys">
+      <kbd>[/]</kbd> switch tab &nbsp; <kbd>↑↓</kbd> select &nbsp; <kbd>enter/→</kbd> open &nbsp; <kbd>esc/←</kbd> back &nbsp; <kbd>tab</kbd> backlog &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="blocked-dependency">Blocked on a dependency (LC-72, themeless) — lands on Hierarchy</div>
+<div class="term">
+  <div class="id-row">LC-72</div>
+  <div class="title-row">Same-item spec-to-build transition: one id for the whole arc</div>
+  <div class="meta-row">project: lightcycle</div>
+  <div class="meta-row">no theme (66% of items are themeless in the live store)</div>
+  <div class="escalated">
+    <div class="tag">⚠ needs you</div>
+    <div class="why">Blocked · depends on <a href="#">LC-54.4</a></div>
+  </div>
+
+  <div class="tabs">
+    <span class="tab active">Hierarchy</span>
+    <span class="tab">Log</span>
+    <span class="tab">Artifacts</span>
+    <span class="hint">[ / ]</span>
+  </div>
+
+  <div class="body">
+    <div class="row current"><span class="icon">▸</span><span class="nid">LC-72</span><span class="label">Same-item spec-to-build transition — its own root, no theme, so it's the top row here</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.1</span><span class="label">write-code</span><span class="role">write-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.2</span><span class="label">open-pr</span><span class="role">open-pr</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.3</span><span class="label">watch-ci</span><span class="role">watch-ci</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.4</span><span class="label">review-code</span><span class="role">review-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.5</span><span class="label">await-merge</span><span class="role">human</span></div>
+  </div>
+
+  <div class="pad"></div>
+  <div class="footer">
+    <div class="status"><span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span></div>
+    <div class="keys">
+      <kbd>[/]</kbd> switch tab &nbsp; <kbd>↑↓</kbd> scroll &nbsp; <kbd>esc/←</kbd> back &nbsp; <kbd>tab</kbd> backlog &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="done-item">Done item (LC-141) — lands on Artifacts</div>
+<div class="term">
+  <div class="id-row">LC-141</div>
+  <div class="title-row">Project model: central shortcode map + repos anywhere</div>
+  <div class="meta-row">project: lightcycle</div>
+  <div class="meta-row">theme: LC-143 · Project model: github-identity registry (hybrid)</div>
+  <div class="meta-row">workflow: lightcycle/spec-driven@abfb01d</div>
+  <div class="fieldset">
+    <div class="field"><span class="k">STEP</span><span class="v">done</span></div>
+  </div>
+
+  <div class="tabs">
+    <span class="tab">Hierarchy</span>
+    <span class="tab">Log</span>
+    <span class="tab active">Artifacts</span>
+    <span class="hint">[ / ]</span>
+  </div>
+
+  <div class="body">
+    <div class="artifact-row"><span class="atype">repo</span><span class="aval">lightcycle</span></div>
+    <div class="artifact-row"><span class="atype">branch</span><span class="aval">feat/LC-141-project-model-central-shortcode-map</span></div>
+    <div class="artifact-row"><span class="atype">pr</span><span class="aval">github.com/.../lightcycle/pull/268</span></div>
+  </div>
+
+  <div class="pad"></div>
+  <div class="footer">
+    <div class="status"><span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span></div>
+    <div class="keys">
+      <kbd>[/]</kbd> switch tab &nbsp; <kbd>↑↓</kbd> select &nbsp; <kbd>enter/→</kbd> open &nbsp; <kbd>esc/←</kbd> back &nbsp; <kbd>tab</kbd> backlog &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="theme">Theme (LC-143) — lands on Hierarchy, no item-level fields</div>
+<div class="term">
+  <div class="id-row">LC-143</div>
+  <div class="title-row">Project model: github-identity registry (hybrid)</div>
+  <div class="meta-row">project: lightcycle</div>
+  <div class="meta-row">theme · 4 items underneath</div>
+
+  <div class="tabs">
+    <span class="tab active">Hierarchy</span>
+    <span class="tab">Log</span>
+    <span class="tab">Artifacts</span>
+    <span class="hint">[ / ]</span>
+  </div>
+
+  <div class="body">
+    <div class="row current"><span class="icon">▸</span><span class="nid">LC-143</span><span class="label">Project model: github-identity registry (hybrid) — its own root, no parent theme above it</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.1</span><span class="label">Registry table + identity-based repo resolution + migration (8 steps)</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.2</span><span class="label">Clone-on-demand: fetch an absent project on resolve (8 steps)</span></div>
+    <div class="row indent1"><span class="icon">▸</span><span class="nid">LC-143.3</span><span class="label">lc project scan: recursive discovery by git remote (8 steps)</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.4</span><span class="label">lc project scan detects repo roots, not inside-a-repo (ph3 fix) (8 steps)</span></div>
+  </div>
+
+  <div class="pad"></div>
+  <div class="footer">
+    <div class="status"><span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span></div>
+    <div class="keys">
+      <kbd>[/]</kbd> switch tab &nbsp; <kbd>↑↓</kbd> scroll &nbsp; <kbd>enter/→</kbd> open node &nbsp; <kbd>esc/←</kbd> back &nbsp; <kbd>tab</kbd> backlog &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="hierarchy-scrolled">Hierarchy tab, scrolled deep (LC-143.3) — ancestor pinned to top</div>
+<div class="term">
+  <div class="id-row">LC-143.3</div>
+  <div class="title-row">lc project scan: recursive discovery by git remote</div>
+  <div class="meta-row">project: lightcycle</div>
+  <div class="meta-row">theme: LC-143 · Project model: github-identity registry (hybrid)</div>
+  <div class="meta-row">workflow: lightcycle/spec-driven@abfb01d</div>
+  <div class="fieldset">
+    <div class="field"><span class="k">STEP</span><span class="v">write-code</span></div>
+    <div class="field"><span class="k">ROLE</span><span class="v">write-code</span></div>
+    <div class="field"><span class="k">ELAPSED</span><span class="v">14m</span></div>
+  </div>
+
+  <div class="tabs">
+    <span class="tab active">Hierarchy</span>
+    <span class="tab">Log</span>
+    <span class="tab">Artifacts</span>
+    <span class="hint">[ / ]</span>
+  </div>
+
+  <div class="body">
+    <div class="pinned-ancestor">
+      <span class="icon">○</span><span class="nid">LC-143</span><span class="label">Project model: github-identity registry (hybrid) — scrolled out of normal view, pinned here instead</span>
+    </div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.4</span><span class="label">write-code</span><span class="role">write-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.5</span><span class="label">code-open-pr</span><span class="role">open-pr</span></div>
+    <div class="row indent1 current"><span class="icon">▸</span><span class="nid">LC-143.3.6</span><span class="label">watch-ci</span><span class="role">watch-ci</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.7</span><span class="label">review-code</span><span class="role">review-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.8</span><span class="label">code-await-merge</span><span class="role">human</span></div>
+  </div>
+
+  <div class="pad"></div>
+  <div class="footer">
+    <div class="status"><span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span></div>
+    <div class="keys">
+      <kbd>[/]</kbd> switch tab &nbsp; <kbd>↑↓</kbd> scroll &nbsp; <kbd>enter/→</kbd> open node &nbsp; <kbd>esc/←</kbd> back &nbsp; <kbd>tab</kbd> backlog &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="log-finished">Log tab (LC-143.3) — step just finished while watching</div>
+<div class="term">
+  <div class="id-row">LC-143.3</div>
+  <div class="title-row">lc project scan: recursive discovery by git remote</div>
+  <div class="meta-row">project: lightcycle</div>
+  <div class="meta-row">theme: LC-143 · Project model: github-identity registry (hybrid)</div>
+  <div class="meta-row">workflow: lightcycle/spec-driven@abfb01d</div>
+  <div class="fieldset">
+    <div class="field"><span class="k">STEP</span><span class="v">write-code</span></div>
+  </div>
+
+  <div class="tabs">
+    <span class="tab">Hierarchy</span>
+    <span class="tab active">Log</span>
+    <span class="tab">Artifacts</span>
+    <span class="hint">[ / ]</span>
+  </div>
+
+  <div class="body">
+    <div class="log-line">14:02:11 reading lightcycle/adapters/sqlite_store.py</div>
+    <div class="log-line">14:02:14 adding project registry table migration</div>
+    <div class="log-line">14:03:02 writing tests/unit/test_project_registry.py</div>
+    <div class="log-line">14:04:19 fast tier green, opening PR</div>
+    <div class="log-finished">✓ step finished</div>
+  </div>
+
+  <div class="pad"></div>
+  <div class="footer">
+    <div class="status"><span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span></div>
+    <div class="keys">
+      <kbd>[/]</kbd> switch tab &nbsp; <kbd>↑↓</kbd> scroll &nbsp; <kbd>esc/←</kbd> back &nbsp; <kbd>tab</kbd> backlog &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="claude-unavailable">LC-143.3, opened while Claude is unavailable — worker was killed, reverted to queued</div>
+<div class="term">
+  <div class="id-row">LC-143.3</div>
+  <div class="title-row">lc project scan: recursive discovery by git remote</div>
+  <div class="meta-row">project: lightcycle</div>
+  <div class="meta-row">theme: LC-143 · Project model: github-identity registry (hybrid)</div>
+  <div class="meta-row">workflow: lightcycle/spec-driven@abfb01d</div>
+  <div class="fieldset">
+    <div class="field"><span class="k">STEP</span><span class="v">write-code</span></div>
+  </div>
+
+  <div class="tabs">
+    <span class="tab active">Hierarchy</span>
+    <span class="tab">Log</span>
+    <span class="tab">Artifacts</span>
+    <span class="hint">[ / ]</span>
+  </div>
+
+  <div class="body">
+    <div class="row"><span class="icon">○</span><span class="nid">LC-143</span><span class="label">Project model: github-identity registry (hybrid)</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.1</span><span class="label">Registry table + identity-based repo resolution + migration (8 steps)</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.2</span><span class="label">Clone-on-demand: fetch an absent project on resolve (8 steps)</span></div>
+    <div class="row indent1 current"><span class="icon">○</span><span class="nid">LC-143.3</span><span class="label">lc project scan: recursive discovery by git remote — queued, its worker was killed when the breaker tripped</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.4</span><span class="label">lc project scan detects repo roots, not inside-a-repo (ph3 fix) (8 steps)</span></div>
+  </div>
+
+  <div class="pad"></div>
+  <div class="footer">
+    <div class="status"><span><span class="pool">● pool running</span> &nbsp; <span class="claude-down">⊘ claude unavailable · resumes 14:32:00</span> &nbsp; v0.4.1</span></div>
+    <div class="keys">
+      <kbd>[/]</kbd> switch tab &nbsp; <kbd>↑↓</kbd> scroll &nbsp; <kbd>enter/→</kbd> open node &nbsp; <kbd>esc/←</kbd> back &nbsp; <kbd>tab</kbd> backlog &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>

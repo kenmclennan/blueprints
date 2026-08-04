@@ -1,0 +1,346 @@
+<title>Wireframe — Backlog</title>
+<style>
+  :root {
+    --bg: #0c0c0f;
+    --panel: #101014;
+    --border: #3a3a42;
+    --text: #d8d8dc;
+    --dim: #6e6e78;
+    --cyan: #5fd7e0;
+    --amber: #e0a95f;
+    --red: #e05f6b;
+    --selected-bg: #1c2a2c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: #050506;
+    color: var(--text);
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    margin: 0;
+    padding: 40px 20px;
+  }
+  .caption {
+    max-width: 900px;
+    margin: 0 auto 16px;
+    font-size: 13px;
+    color: #9a9aa4;
+    line-height: 1.6;
+  }
+  .caption b { color: #d8d8dc; }
+  .caption .flag { color: var(--amber); }
+  .label-row {
+    width: 860px;
+    max-width: 100%;
+    margin: 24px auto 6px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .term {
+    width: 860px;
+    max-width: 100%;
+    margin: 0 auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: auto;
+    position: relative;
+  }
+  .filterbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 2ch 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--dim);
+  }
+  .filterbar .label { color: var(--text); }
+  .tabs-top {
+    padding: 8px 2ch;
+    border-bottom: 1px solid var(--border);
+    color: var(--dim);
+  }
+  .tabs-top .active { color: var(--cyan); font-weight: 600; }
+  .row {
+    display: grid;
+    grid-template-columns: 2ch 9ch 10ch 1fr;
+    column-gap: 1.5ch;
+    padding: 5px 2ch;
+    align-items: start;
+  }
+  .row.selected { background: var(--selected-bg); }
+  .cursor { color: var(--cyan); }
+  .id { color: var(--text); }
+  .title { color: var(--text); overflow-wrap: break-word; }
+  .project { color: var(--dim); }
+  .project.tagged { color: var(--cyan); }
+  .pad { padding: 10px 2ch 4px; }
+  .footer {
+    border-top: 1px solid var(--border);
+  }
+  .footer .status { display: flex; justify-content: space-between; padding: 6px 2ch 0; color: var(--dim); font-size: 13px; }
+  .footer .status .pool { color: var(--cyan); }
+  .footer .status .claude-ok { color: var(--cyan); }
+  .footer .status .claude-down { color: var(--red); }
+  .footer .status .upgrade { color: var(--amber); }
+  .footer .keys { padding: 4px 2ch 6px; color: var(--dim); font-size: 13px; }
+  .footer .keys kbd { color: var(--text); font-weight: 600; }
+
+  .picker-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 5, 6, 0.72);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 60px;
+  }
+  .picker {
+    width: 320px;
+    background: var(--panel);
+    border: 1px solid var(--cyan);
+  }
+  .picker .head {
+    padding: 8px 2ch;
+    border-bottom: 1px solid var(--border);
+    color: var(--cyan);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .picker .opt {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 2ch;
+  }
+  .picker .opt.selected { background: var(--selected-bg); }
+  .picker .opt .cursor { color: var(--cyan); margin-right: 1ch; }
+  .picker .opt .count { color: var(--dim); }
+  .picker .foot { padding: 6px 2ch; border-top: 1px solid var(--border); color: var(--dim); font-size: 12px; }
+  .picker .foot kbd { color: var(--text); font-weight: 600; }
+
+  .empty-state {
+    padding: 40px 2ch 44px;
+    text-align: center;
+    color: var(--dim);
+  }
+  .empty-state .msg { color: var(--dim); }
+  .empty-state .msg b { color: var(--text); }
+  .empty-state .hint { margin-top: 8px; font-size: 13px; }
+  .empty-state .hint kbd { color: var(--text); font-weight: 600; }
+</style>
+
+<p class="caption">
+  <b>Backlog</b> — reached from the Priority List via <b>Tab</b> or the tab strip. Todo items not yet
+  activated. No step/elapsed-time column - these haven't started. Real data: 13 items are backlogged
+  right now, 12 unscoped and 1 tagged 'lightcycle' - shown as-is rather than an invented busier example.<br>
+  The filter bar shows only the <em>current</em> filter's own count ("PROJECT: All · 13 items"), not a
+  per-project breakdown - that's the one number that stays a single short line no matter how many
+  projects eventually exist. <b>f</b> opens a picker (second state below) rather than cycling through
+  projects one keypress at a time - cycling doesn't scale once there are more than a handful.<br>
+  Tab strip moved to the top of the screen (matches the Priority List now) - top-level screens only,
+  not repeated on the deeper screens.<br>
+  <span class="flag">New:</span> the footer's claude-availability indicator, same treatment as the
+  Priority List - default "available"; a fifth state below shows it tripped (circuit breaker open).<br>
+  Two empty states below, distinguished deliberately: the backlog has genuinely nothing in it anywhere,
+  versus the backlog is empty only under the current project filter - the message differs so filtering
+  never reads as "no backlog work exists at all."
+</p>
+
+<div class="label-row" id="normal">Backlog — normal state</div>
+<div class="term">
+  <div class="tabs-top">Current work &nbsp;·&nbsp; <span class="active">Backlog</span></div>
+  <div class="filterbar">
+    <span class="label">PROJECT: All</span>
+    <span class="label">13 items</span>
+  </div>
+
+  <div class="row selected">
+    <span class="cursor">❯</span>
+    <span class="id">gcc</span>
+    <span class="project"></span>
+    <span class="title">visibility TUI</span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="id">o16b</span>
+    <span class="project"></span>
+    <span class="title">Pause/resume a killed agent with its context (session --resume) for token efficiency</span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="id">lp0</span>
+    <span class="project"></span>
+    <span class="title">support isolated experimental work - iterate locally without a PR-per-pass to GitHub</span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="id">LC-142</span>
+    <span class="project tagged">lightcycle</span>
+    <span class="title">Workers can't self-verify workflow bundles; lc workflow blocked</span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="id">tg-1</span>
+    <span class="project"></span>
+    <span class="title">GRID-073 container-isolated workers: run each worker in a Docker container for real system isolation</span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="id">LC-90</span>
+    <span class="project"></span>
+    <span class="title">Worker store-access guard is bypassable, not a boundary</span>
+  </div>
+
+  <div class="pad"></div>
+
+  <div class="footer">
+    <div class="status">
+      <span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span>
+      <span class="upgrade">⬆ v0.4.2 available</span>
+    </div>
+    <div class="keys">
+      <kbd>↑↓</kbd> move &nbsp; <kbd>enter/→</kbd> explore in tree &nbsp; <kbd>f</kbd> filter &nbsp;
+      <kbd>tab</kbd> current work &nbsp; <kbd>ctrl-u/ctrl-d</kbd> scroll &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="picker-open">Backlog — with the filter picker open (f pressed)</div>
+<div class="term">
+  <div class="tabs-top">Current work &nbsp;·&nbsp; <span class="active">Backlog</span></div>
+  <div class="filterbar">
+    <span class="label">PROJECT: All</span>
+    <span class="label">13 items</span>
+  </div>
+
+  <div class="row selected">
+    <span class="cursor">❯</span>
+    <span class="id">gcc</span>
+    <span class="project"></span>
+    <span class="title">visibility TUI</span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="id">o16b</span>
+    <span class="project"></span>
+    <span class="title">Pause/resume a killed agent with its context (session --resume) for token efficiency</span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="id">lp0</span>
+    <span class="project"></span>
+    <span class="title">support isolated experimental work - iterate locally without a PR-per-pass to GitHub</span>
+  </div>
+
+  <div class="pad"></div>
+
+  <div class="footer">
+    <div class="status">
+      <span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span>
+      <span class="upgrade">⬆ v0.4.2 available</span>
+    </div>
+    <div class="keys">
+      <kbd>↑↓</kbd> move &nbsp; <kbd>enter/→</kbd> explore in tree &nbsp; <kbd>f</kbd> filter &nbsp;
+      <kbd>tab</kbd> current work &nbsp; <kbd>ctrl-u/ctrl-d</kbd> scroll &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+
+  <div class="picker-overlay">
+    <div class="picker">
+      <div class="head">Filter by project</div>
+      <div class="opt selected"><span><span class="cursor">❯</span>All</span><span class="count">13</span></div>
+      <div class="opt"><span>&nbsp;&nbsp;lightcycle</span><span class="count">1</span></div>
+      <div class="foot"><kbd>↑↓</kbd> move &nbsp; <kbd>enter</kbd> apply &nbsp; <kbd>esc</kbd> cancel</div>
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="empty">Backlog — empty (nothing registered anywhere, PROJECT: All)</div>
+<div class="term">
+  <div class="tabs-top">Current work &nbsp;·&nbsp; <span class="active">Backlog</span></div>
+  <div class="filterbar">
+    <span class="label">PROJECT: All</span>
+    <span class="label">0 items</span>
+  </div>
+
+  <div class="empty-state">
+    <div class="msg">Nothing in the backlog.</div>
+  </div>
+
+  <div class="footer">
+    <div class="status">
+      <span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span>
+      <span class="upgrade">⬆ v0.4.2 available</span>
+    </div>
+    <div class="keys">
+      <kbd>tab</kbd> current work &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="empty-filtered">Backlog — empty under a project filter ('lightcycle' selected, 0 items)</div>
+<div class="term">
+  <div class="tabs-top">Current work &nbsp;·&nbsp; <span class="active">Backlog</span></div>
+  <div class="filterbar">
+    <span class="label">PROJECT: lightcycle</span>
+    <span class="label">0 items</span>
+  </div>
+
+  <div class="empty-state">
+    <div class="msg">No backlog items for <b>lightcycle</b>.</div>
+    <div class="hint">Press <kbd>f</kbd> to check All.</div>
+  </div>
+
+  <div class="footer">
+    <div class="status">
+      <span><span class="pool">● pool running</span> &nbsp; <span class="claude-ok">● claude available</span> &nbsp; v0.4.1</span>
+      <span class="upgrade">⬆ v0.4.2 available</span>
+    </div>
+    <div class="keys">
+      <kbd>f</kbd> filter &nbsp; <kbd>tab</kbd> current work &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
+
+<div class="label-row" id="claude-unavailable">Backlog — Claude unavailable (circuit breaker open)</div>
+<div class="term">
+  <div class="tabs-top">Current work &nbsp;·&nbsp; <span class="active">Backlog</span></div>
+  <div class="filterbar">
+    <span class="label">PROJECT: All</span>
+    <span class="label">13 items</span>
+  </div>
+
+  <div class="row selected">
+    <span class="cursor">❯</span>
+    <span class="id">gcc</span>
+    <span class="project"></span>
+    <span class="title">visibility TUI</span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="id">o16b</span>
+    <span class="project"></span>
+    <span class="title">Pause/resume a killed agent with its context (session --resume) for token efficiency</span>
+  </div>
+  <div class="row">
+    <span></span>
+    <span class="id">lp0</span>
+    <span class="project"></span>
+    <span class="title">support isolated experimental work - iterate locally without a PR-per-pass to GitHub</span>
+  </div>
+
+  <div class="pad"></div>
+
+  <div class="footer">
+    <div class="status">
+      <span><span class="pool">● pool running</span> &nbsp; <span class="claude-down">⊘ claude unavailable · resumes 14:32:00</span> &nbsp; v0.4.1</span>
+      <span class="upgrade">⬆ v0.4.2 available</span>
+    </div>
+    <div class="keys">
+      <kbd>↑↓</kbd> move &nbsp; <kbd>enter/→</kbd> explore in tree &nbsp; <kbd>f</kbd> filter &nbsp;
+      <kbd>tab</kbd> current work &nbsp; <kbd>ctrl-u/ctrl-d</kbd> scroll &nbsp; <kbd>q</kbd> quit
+    </div>
+  </div>
+</div>
