@@ -47,6 +47,14 @@ Everything reached by opening an item.
 
 **Exit criteria:** every screen in [the screen flow](../user-flows/screen-flow-current.md) is reachable, every transition it authorises works, and back-navigation returns to the prior position from every depth.
 
+### M4 - Row grid columns hold under realistic data
+
+Filed by `audit-design` against the built M1-M3 screens, not planned up front - the fixed-width `id`/`role` columns those milestones already shipped wrap or silently truncate once real ids and role names exceed the token widths, which the engine's own unbounded shortcode rule permits.
+
+1. [WI-008 - Row-grid columns hold under realistic id and role lengths](WI-008.md)
+
+**Exit criteria:** no id or role cell in the Priority List, Backlog, or Hierarchy tab wraps a row onto a second line or drops a character silently, verified against both a short shortcode and the engine's own default, unshortened one.
+
 ---
 
 ← Back to [Operator monitors the pipeline - Version 1](../index.md)
