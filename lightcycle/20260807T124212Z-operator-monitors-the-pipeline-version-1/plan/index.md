@@ -47,13 +47,17 @@ Everything reached by opening an item.
 
 **Exit criteria:** every screen in [the screen flow](../user-flows/screen-flow-current.md) is reachable, every transition it authorises works, and back-navigation returns to the prior position from every depth.
 
-### M4 - Row grid columns hold under realistic data
+### M4 - Fidelity gaps found by running the built M1-M3 screens against the design
 
-Filed by `audit-design` against the built M1-M3 screens, not planned up front - the fixed-width `id`/`role` columns those milestones already shipped wrap or silently truncate once real ids and role names exceed the token widths, which the engine's own unbounded shortcode rule permits.
+Filed by `audit-design`, not planned up front - `plan-next` found nothing left in this plan, but running the already-delivered screens against the whole frozen design (not just checking off stories) surfaced defects none of M1-M3's own fixtures exercised.
 
-1. [WI-008 - Row-grid columns hold under realistic id and role lengths](WI-008.md)
+1. [WI-008 - Row-grid columns hold under realistic id, role, and type lengths](WI-008.md)
+2. [WI-009 - Hierarchy tab visual and escalation fidelity](WI-009.md)
+3. [WI-010 - Footer status line on the Artifact Viewer screens](WI-010.md)
+4. [WI-011 - Log tab's live "now" cue](WI-011.md)
+5. [WI-012 - Project-filter picker's item counts never render](WI-012.md)
 
-**Exit criteria:** no id or role cell in the Priority List, Backlog, or Hierarchy tab wraps a row onto a second line or drops a character silently, verified against both a short shortcode and the engine's own default, unshortened one.
+**Exit criteria:** no id, role, or type cell in the Priority List, Backlog, Hierarchy tab, or Artifacts tab wraps a row onto a second line or drops a character silently, verified against both a short shortcode and the engine's own default, unshortened one; the hierarchy tree's background, the pinned-ancestor row, and the escalation panel match the wireframe; `l` behaves consistently with `Enter` on the hierarchy tab; the footer's status line renders and stays live on the text and list Artifact Viewer screens; the Log tab's most recent live line is visually distinguished as "now"; the project-filter picker shows every row's item count.
 
 ---
 
