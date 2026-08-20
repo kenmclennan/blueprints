@@ -82,6 +82,8 @@ Both halves of that sum are load-bearing. Without the flexible minimum, a single
 
 Stacked, a row keeps its identifying fields on a first line and moves its prose to a continuation line. The first line is still a grid and still obeys every rule above; only the flexible column moves.
 
+**The continuation line spans the row.** It is a line of its own, not a cell in the grid above it, so its width is the row budget less its indent - never the space left over beside the atomic columns. Leaving the prose in the flexible column's leftover width is what stacking exists to avoid: at the widths where a row stacks, that leftover is a handful of characters and the prose wraps one fragment per line. The 24ch flexible minimum therefore holds in the stacked layout exactly as it does in the unstacked one; if it cannot, the grid is at its floor.
+
 #### Priority List
 
 ```
@@ -118,7 +120,18 @@ Only two columns, so this grid reaches the breakpoint last - `type` plus the 24c
 
 ### The floor
 
-Stacking has its own minimum: the glyph columns plus the widest atomic value on the first line. Below that, no arrangement of this design works, and the screen must say so rather than render a corrupted grid - a single centred message naming the width needed, in `--dim`, with the footer still present so the operator can still quit. This is the state the design previously did not have.
+Stacking has its own minimum, and it is whichever of its two lines needs more room:
+
+```
+floor = max(sum(glyph widths) + sum(atomic content widths),   the first line
+            indent + flexible minimum)                        the continuation line
+```
+
+The second term is the one that is easy to forget and the one that bites. A stacked row's first line can be narrow - it holds only identifiers - while its continuation line still needs the full 24ch to be prose rather than a column of fragments. A floor set from the first line alone leaves a band of widths above it where the screen insists it can render and produces mush.
+
+Below the floor no arrangement of this design works, and the screen must say so rather than render a corrupted grid - a single centred message in `--dim`, with the footer still present so the operator can still quit.
+
+**The message names the terminal width the operator must set**, not the grid's own internal budget. Borders, padding and the scrollbar all sit between the two, so a message quoting the internal number names a width that still does not work when the operator resizes to it.
 
 ## Typography
 
