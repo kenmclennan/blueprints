@@ -19,7 +19,7 @@ For keyboard, focus and interaction conventions (arrows, `Tab`, `Ctrl+U`/`Ctrl+D
 | `--panel` | `#101014` | Overlay panel background - the picker (Backlog) and toast (Artifact Viewer) surfaces, raised above the terminal | All four |
 | `--border` | `#3a3a42` | All border lines - panel border, dividers, footer top border | All four |
 | `--text` | `#d8d8dc` | Primary text | All four |
-| `--dim` | `#6e6e78` | Secondary/muted text - unselected icons, footer key hints, non-current log lines, dim labels | All four |
+| `--dim` | `#6e6e78` | Secondary/muted text - unselected icons, footer key hints, dim labels. **Not log lines** - see "The Log tab reads at full contrast" | All four |
 | `--cyan` | `#5fd7e0` | Active / selected / current state | All four |
 | `--amber` | `#e0a95f` | Warning / dependency / attention-adjacent state | All four |
 | `--red` | `#e05f6b` | Needs-attention / alert state | Priority List, Backlog, Hub - **not** the Artifact Viewer |
@@ -42,6 +42,12 @@ Canonical source: the priority list's row icons (`.icon.attn`, `.icon.dep`, `.ic
 | Selection cursor | `❯` | `--cyan` | Row grid's leftmost cell, every list screen |
 
 This is the exact table `decomposing-designs`' own "Visual and rendered artifacts" fix required a shared block for, and the one the design packet audit found missing.
+
+## The Log tab reads at full contrast
+
+Every log line renders in `--text`. The log is not chrome subordinate to the header; it is the thing an operator opened the tab to read, and a screenful of `--dim` is what dim was never chosen for - the token was picked against a four-line illustration, where subordinating the log was the right trade, and it inverts at real length.
+
+So brightness carries no meaning in the log, and the live line is distinguished the way the wireframe already draws it - by the cyan block cursor `▌` at its end, present only while the tail is live. That is the only "now" cue; do not reintroduce a brightness difference alongside it.
 
 ## Row grid conventions
 
