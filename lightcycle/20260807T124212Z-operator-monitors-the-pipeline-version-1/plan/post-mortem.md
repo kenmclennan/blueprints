@@ -84,6 +84,29 @@ Several gaps share this shape. The wireframes are accurate and were followed fai
 
 The escalation gate arrived in the inbox as `code-review-rounds` in the title column and `code-review-roun/ds` wrapped in the step column, with nothing saying what decision was wanted - for a gate whose completion is destructive (it has no outgoing route, so closing it cascades and deletes every branch the item recorded, including the open PR's head). The operator was expected to infer all of that from a row that named an internal stage identifier twice. (LC-273, LC-277)
 
+### The driver was the weakest link, and agents refusing to build caught it
+
+WI-008 - the first remedial item - took **31 steps**: five `implement-features` rounds, four `review-code` rounds, two escalations, and four rounds lost outright. Every one of the four traces to the driver, not to the pipeline.
+
+- The design was amended **twice after its scenarios had been frozen from it**. The second amendment deleted a sentence ("indented to where it starts in the unstacked grid") that three frozen scenarios still asserted verbatim, and replaced a formula (`2 * row.depth + 2`) that a fourth still hardcoded. A build could satisfy the current design or its own frozen contract, never both.
+- A rework instruction was then issued telling the builder to do exactly that, *and* not to touch the tests carrying the old rule.
+- When that instruction was withdrawn, it was withdrawn **only in the step's description**, not on the PR. `watch-ci` reads the PR thread, found an unresolved rejection against a green HEAD, emitted `ci-failed`, and the next builder re-derived the same impossible conflict from the same stale comment. A withdrawal has to travel by the channel the original travelled by.
+
+What stopped it each time was an agent **refusing to build something it could prove was impossible**. Three blocks, three proofs, three times right - the last one a bare numeric contradiction (`2 * row.depth + 2` versus `6 + depth`, different at every depth but four) rather than an appeal to judgement. The `[designer]` convention and a step that can park itself as blocked were worth more here than any amount of reviewer diligence: a reviewer can only reject what was built, while a blocked step rejects the instruction.
+
+The resolution was to stop trying to deliver it: the plan was split, the mechanism moved to WI-013 with its own scenarios to be cut from the current design, and WI-008 shipped the sizing that had been correct and mergeable for three rounds. **A settled improvement should not be held hostage to an unsettled one in the same item**, and noticing that took far too long.
+
+### A test that cannot fail, four times
+
+The same defect class appeared four separate times, each passing review because the assertion looked like it was checking the right thing:
+
+1. Log-tab fixtures hand-written to match the wireframe, so both sides of the comparison came from one fiction (LC-309).
+2. Four `@then` steps asserting through `table.get_cell(...)`, which returns the stored value regardless of paint width - structurally unable to fail against the silent truncation they existed to catch.
+3. LC-310's regression test, which passed against the unfixed code: its fake returned an empty set for the one lookup the bug depends on. The spec specified that test, the brief asked for it, and review confirmed it "present and passing" - three gates checked that it existed and was green, none that it could fail.
+4. LC-297's back-arrow fix, verified in the one state where the bug cannot occur ("left now closes the hub even when nothing is focused"), and still broken with the log pane focused.
+
+The remedy that works is cheap and mechanical: **show the test failing against the unfixed code, and report both numbers.** Where that was demanded explicitly, it was done and it worked - one round reverted `atomic_column_width` to a 9-character cap and confirmed all four assertions failed. Where it was not demanded, a green run was accepted as proof four times.
+
 ## Numbers so far
 
 |                                             |                            |
