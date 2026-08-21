@@ -60,6 +60,17 @@ Filed by `audit-design`, not planned up front - `plan-next` found nothing left i
 
 **Exit criteria:** no id, role, or type cell in the Priority List, Backlog, Hierarchy tab, or Artifacts tab wraps a row onto a second line or drops a character silently, verified against both a short shortcode and the engine's own default, unshortened one; the hierarchy tree's background, the pinned-ancestor row, and the escalation panel match the wireframe; `l` behaves consistently with `Enter` on the hierarchy tab; the footer's status line renders and stays live on the text and list Artifact Viewer screens; the Log tab's most recent live line is visually distinguished as "now"; the project-filter picker shows every row's item count; and no stacked row's continuation line wraps mid-word at any width between the floor and the width at which rows stop stacking.
 
+### M5 - Fidelity gaps found by running the built M1-M4 screens against the design
+
+Filed by `audit-design`, not planned up front - `plan-next` found nothing left in this plan after M4 landed, but running the already-delivered screens against the whole frozen design again surfaced defects none of M1-M4's own fixtures exercised, mostly composited-frame colour and structural gaps invisible to a widget's own self-report.
+
+1. [WI-014 - Priority List rows paint a non-token background colour](WI-014.md)
+2. [WI-015 - Backlog filter bar never renders](WI-015.md)
+3. [WI-016 - Node hub header and hierarchy fidelity](WI-016.md)
+4. [WI-017 - Artifact Viewer header colour treatment and position indicator](WI-017.md)
+
+**Exit criteria:** every Priority List row (not just the cursor row) paints `--bg`; the backlog's `PROJECT: <name>` / item-count filter bar actually reaches the composited frame on every backlog state; hub header field values render at `--text` against dim keys; a theme's own hub header either shows an item-count line and a sourceable project value or the Blueprint's `#theme` state is corrected; `l` opens the Log tab for a done item/theme exactly as it does for a done step; and the artifact-viewer header colours only the type word cyan (id dim) and the text viewer shows a position indicator - each verified on the actual composited frame, not a widget's own report of itself.
+
 ---
 
 ← Back to [Operator monitors the pipeline - Version 1](../index.md)
