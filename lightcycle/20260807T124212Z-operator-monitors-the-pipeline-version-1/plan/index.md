@@ -56,8 +56,9 @@ Filed by `audit-design`, not planned up front - `plan-next` found nothing left i
 3. [WI-010 - Footer status line on the Artifact Viewer screens](WI-010.md)
 4. [WI-011 - Log tab's live "now" cue](WI-011.md)
 5. [WI-012 - Project-filter picker's item counts never render](WI-012.md)
+6. [WI-013 - A stacked row renders as one full-width cell](WI-013.md)
 
-**Exit criteria:** no id, role, or type cell in the Priority List, Backlog, Hierarchy tab, or Artifacts tab wraps a row onto a second line or drops a character silently, verified against both a short shortcode and the engine's own default, unshortened one; the hierarchy tree's background, the pinned-ancestor row, and the escalation panel match the wireframe; `l` behaves consistently with `Enter` on the hierarchy tab; the footer's status line renders and stays live on the text and list Artifact Viewer screens; the Log tab's most recent live line is visually distinguished as "now"; the project-filter picker shows every row's item count.
+**Exit criteria:** no id, role, or type cell in the Priority List, Backlog, Hierarchy tab, or Artifacts tab wraps a row onto a second line or drops a character silently, verified against both a short shortcode and the engine's own default, unshortened one; the hierarchy tree's background, the pinned-ancestor row, and the escalation panel match the wireframe; `l` behaves consistently with `Enter` on the hierarchy tab; the footer's status line renders and stays live on the text and list Artifact Viewer screens; the Log tab's most recent live line is visually distinguished as "now"; the project-filter picker shows every row's item count; and no stacked row's continuation line wraps mid-word at any width between the floor and the width at which rows stop stacking.
 
 ---
 
