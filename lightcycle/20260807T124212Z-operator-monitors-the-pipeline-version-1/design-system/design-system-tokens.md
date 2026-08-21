@@ -82,16 +82,31 @@ Both halves of that sum are load-bearing. Without the flexible minimum, a single
 
 Stacked, a row keeps its identifying fields on a first line and moves its prose to a continuation line. The first line is still a grid and still obeys every rule above; only the flexible column moves.
 
-**The continuation line spans the row.** It is a line of its own, not a cell in the grid above it, so its width is the row budget less its indent - never the space left over beside the atomic columns. Leaving the prose in the flexible column's leftover width is what stacking exists to avoid: at the widths where a row stacks, that leftover is a handful of characters and the prose wraps one fragment per line. The 24ch flexible minimum therefore holds in the stacked layout exactly as it does in the unstacked one; if it cannot, the grid is at its floor.
+**A stacked row is not a grid row.** It is one full-width cell holding two composed lines: the identifying fields, each padded to its atomic width so they still line up down the list, and beneath them the prose. The column layout is not used for a stacked row at all.
+
+That is a statement about mechanism, and it is deliberate. A row's columns are laid out side by side with one width each and no spanning, so there is no width you can give a flexible column that puts its prose on a line of its own - widen it and the atomic columns that follow it are simply pushed off the frame. On the Priority List and the Hierarchy tab the flexible column is not last (`step`/`time` and `role` follow it), so that is not a hypothetical: it clips `role` to a single character. The columns are the wrong instrument for a two-line row, which is what "a row cannot always be a row" means in practice.
+
+**The continuation line's indent is the glyph columns' width, minimum 2ch** - plus the row's own depth indent on the Hierarchy tab, where indentation carries ancestry and a fixed offset would align a child's prose with its parent's.
+
+| Grid          | Glyph columns          | Continuation indent |
+| ------------- | ---------------------- | ------------------- |
+| Priority List | cursor 2 + icon 4      | 6                   |
+| Backlog       | cursor 2               | 2                   |
+| Hierarchy tab | icon 4 + content 2     | 6 + the row's depth indent |
+| Artifacts tab | none                   | 2                   |
+
+It is emphatically **not** where the flexible column starts in the unstacked grid. That offset is most of the row, and on a grid whose flexible column is last it is the whole first line - which would make the stacked layout cost exactly as much width as the unstacked one and so never be reachable at any terminal width.
+
+The prose therefore gets the row budget less that small indent, and the 24ch flexible minimum holds in the stacked layout exactly as in the unstacked one. If it cannot, the grid is at its floor.
 
 #### Priority List
 
 ```
 ❯ ●  LC-290.1.90  lightcycle  code-review-rounds                14m
-     Deliver the operator-monitors-the-pipeline Blueprint
+      Deliver the operator-monitors-the-pipeline Blueprint
 ```
 
-Cursor, icon, id, project and step stay on the first line; `time` stays with them, right-aligned, because it is short and it is the signal that says how long this has been waiting. The title moves underneath, indented to where it starts in the unstacked grid.
+Cursor, icon, id, project and step stay on the first line, each padded to its atomic width; `time` stays with them, right-aligned, because it is short and it is the signal that says how long this has been waiting. The title moves underneath, at the continuation indent.
 
 #### Backlog
 
@@ -107,7 +122,7 @@ Cursor, icon, id, project and step stay on the first line; `time` stays with the
        Deliver the operator-monitors-the-pipeline Blueprint
 ```
 
-**The continuation line inherits the row's own depth indent, plus a further 2ch.** Indentation is what carries ancestry on this screen, so a continuation line set at a fixed offset would align a child's prose with its parent's and read as a sibling row. The extra 2ch keeps the continuation visibly subordinate to its own first line.
+The continuation indent here is the glyph width plus the row's own depth indent, so a child's prose never aligns with its parent's.
 
 #### Artifacts tab
 
@@ -124,7 +139,7 @@ Stacking has its own minimum, and it is whichever of its two lines needs more ro
 
 ```
 floor = max(sum(glyph widths) + sum(atomic content widths),   the first line
-            indent + flexible minimum)                        the continuation line
+            continuation indent + flexible minimum)            the continuation line
 ```
 
 The second term is the one that is easy to forget and the one that bites. A stacked row's first line can be narrow - it holds only identifiers - while its continuation line still needs the full 24ch to be prose rather than a column of fragments. A floor set from the first line alone leaves a band of widths above it where the screen insists it can render and produces mush.
