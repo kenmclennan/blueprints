@@ -43,6 +43,14 @@ Canonical source: the priority list's row icons (`.icon.attn`, `.icon.dep`, `.ic
 
 This is the exact table `decomposing-designs`' own "Visual and rendered artifacts" fix required a shared block for, and the one the design packet audit found missing.
 
+## The scrollbar is a position indicator, not a control
+
+This is a keyboard TUI: scrolling is the arrow keys, `ctrl-u`/`ctrl-d`, and nothing else. The scrollbar is never clicked, never dragged, never focused. Its whole job is to say where in the buffer you are.
+
+So it recedes. The **track is `--bg`** - it disappears into the frame, leaving no visible gutter down the side of a list. The **thumb is `--dim`** - present enough to find at a glance, quiet enough not to compete with the content it sits beside.
+
+No other colour appears in a scrollbar. It has no hover, active, or focused variant, because none of those states can be reached.
+
 ## The Log tab reads at full contrast
 
 Every log line renders in `--text`. The log is not chrome subordinate to the header; it is the thing an operator opened the tab to read, and a screenful of `--dim` is what dim was never chosen for - the token was picked against a four-line illustration, where subordinating the log was the right trade, and it inverts at real length.
