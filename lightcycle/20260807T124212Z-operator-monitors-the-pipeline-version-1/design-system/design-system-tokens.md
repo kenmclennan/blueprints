@@ -43,6 +43,14 @@ Canonical source: the priority list's row icons (`.icon.attn`, `.icon.dep`, `.ic
 
 This is the exact table `decomposing-designs`' own "Visual and rendered artifacts" fix required a shared block for, and the one the design packet audit found missing.
 
+## A theme's header carries no project
+
+An item's header names its project; a theme's does not, and must not.
+
+A project is an item's own property - it comes from that item's `repo`, and a theme has none. Nothing stops the items under one theme belonging to different repos, so a theme's project is undefined in exactly the case a project line exists to disambiguate. There is no rule for it that is not an invention.
+
+A theme's header is its id, its title, and `theme · N items underneath`. The Hierarchy tab below already lists the items, and each of those does name its project.
+
 ## The node hub's header is a fixed summary, never a document
 
 Every field in the hub header is one line, and **the description is at most two**, wrapped and then clipped. Nothing an operator can put in a node makes the header grow.
@@ -112,12 +120,12 @@ That is a statement about mechanism, and it is deliberate. A row's columns are l
 
 **The continuation line's indent is the glyph columns' width, minimum 2ch** - plus the row's own depth indent on the Hierarchy tab, where indentation carries ancestry and a fixed offset would align a child's prose with its parent's.
 
-| Grid          | Glyph columns          | Continuation indent |
-| ------------- | ---------------------- | ------------------- |
-| Priority List | cursor 2 + icon 4      | 6                   |
-| Backlog       | cursor 2               | 2                   |
-| Hierarchy tab | icon 4 + content 2     | 6 + the row's depth indent |
-| Artifacts tab | none                   | 2                   |
+| Grid          | Glyph columns      | Continuation indent        |
+| ------------- | ------------------ | -------------------------- |
+| Priority List | cursor 2 + icon 4  | 6                          |
+| Backlog       | cursor 2           | 2                          |
+| Hierarchy tab | icon 4 + content 2 | 6 + the row's depth indent |
+| Artifacts tab | none               | 2                          |
 
 It is emphatically **not** where the flexible column starts in the unstacked grid. That offset is most of the row, and on a grid whose flexible column is last it is the whole first line - which would make the stacked layout cost exactly as much width as the unstacked one and so never be reachable at any terminal width.
 
