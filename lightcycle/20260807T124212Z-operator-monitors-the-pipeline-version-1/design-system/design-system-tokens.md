@@ -43,6 +43,16 @@ Canonical source: the priority list's row icons (`.icon.attn`, `.icon.dep`, `.ic
 
 This is the exact table `decomposing-designs`' own "Visual and rendered artifacts" fix required a shared block for, and the one the design packet audit found missing.
 
+## The node hub's header is a fixed summary, never a document
+
+Every field in the hub header is one line, and **the description is at most two**, wrapped and then clipped. Nothing an operator can put in a node makes the header grow.
+
+The header is chrome: it says which node you are looking at. The tabs beneath it are the screen. A header that can outgrow its own frame takes the tab strip and the whole tab body with it - reported live, where a description holding a design document made the header 42 rows on a 28-row terminal and the Log tab, though selected, had nowhere left to draw.
+
+Two lines is what this design already draws; the bound simply makes it true at every length. The full text is not reachable from this screen and does not need to be - the hub is read-only situational awareness, not a reader.
+
+A state exercising a description far longer than two lines belongs in the rendered set, or the bound is a claim nothing checks.
+
 ## The scrollbar is a position indicator, not a control
 
 This is a keyboard TUI: scrolling is the arrow keys, `ctrl-u`/`ctrl-d`, and nothing else. The scrollbar is never clicked, never dragged, never focused. Its whole job is to say where in the buffer you are.
