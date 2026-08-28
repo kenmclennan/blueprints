@@ -51,15 +51,19 @@ A project is an item's own property - it comes from that item's `repo`, and a th
 
 A theme's header is its id, its title, and `theme · N items underneath`. The Hierarchy tab below already lists the items, and each of those does name its project.
 
-## The node hub's header is a fixed summary, never a document
+## The node hub's header is identity, and the description is a tab
 
-Every field in the hub header is one line, and **the description is at most two**, wrapped and then clipped. Nothing an operator can put in a node makes the header grow.
+A root item is a number, a title, a project, a workflow, and a prose description. The first four are identity and belong in the header, one line each. **The description is not, and does not appear in the header at all** - it gets its own tab, alongside Hierarchy, Log and Artifacts.
 
-The header is chrome: it says which node you are looking at. The tabs beneath it are the screen. A header that can outgrow its own frame takes the tab strip and the whole tab body with it - reported live, where a description holding a design document made the header 42 rows on a 28-row terminal and the Log tab, though selected, had nowhere left to draw.
+The header is chrome: it says which node you are looking at. The tabs beneath it are the screen. A header carrying prose can outgrow its own frame and take the tab strip and the whole tab body with it - reported live twice, once where a description made the header 42 rows on a 28-row terminal and the Log tab, though selected, had nowhere left to draw.
 
-Two lines is what this design already draws; the bound simply makes it true at every length. The full text is not reachable from this screen and does not need to be - the hub is read-only situational awareness, not a reader.
+So the header becomes a fixed height that nothing an operator writes can change, and the description becomes readable **in full**, scrolling, rather than clipped to a line count that is always either too short to be useful or too long to be safe.
 
-A state exercising a description far longer than two lines belongs in the rendered set, or the bound is a claim nothing checks.
+**The description is a field of the node, not an artifact.** A backlog item has a description and no brief, which is why a brief is correctly an artifact and a description is correctly not one - so the Artifacts tab is the wrong home for it even once that tab is redesigned.
+
+**Tab order is Hierarchy, Log, Artifacts, Description**, cycled with `[` and `]` as the others are. A node with no description shows the tab with an empty state, the same as the Log and Artifacts tabs do; it is not hidden, because a tab that comes and goes makes `[`/`]` unpredictable.
+
+The tab renders the description as prose: wrapped to the pane, full contrast, scrolling with the same keys the Log tab uses. It is read-only, like every other surface here.
 
 ## The scrollbar is a position indicator, not a control
 
