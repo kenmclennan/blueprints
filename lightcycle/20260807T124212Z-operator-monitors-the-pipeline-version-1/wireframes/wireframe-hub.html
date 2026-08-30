@@ -180,7 +180,7 @@
     remote for its owner/name identity, lists registration candidates with proposed shortcodes
     (dry-run; nothing auto-registers). Builds on phase 1.</div>
   <div class="fieldset">
-    <div class="field"><span class="k">STEP</span><span class="v">write-code</span></div>
+    <div class="field"><span class="k">STEP</span><span class="v">Coding · write-code</span></div>
     <div class="field"><span class="k">ROLE</span><span class="v">write-code</span></div>
     <div class="field"><span class="k">ELAPSED</span><span class="v">14m</span></div>
   </div>
@@ -219,7 +219,7 @@
     remote for its owner/name identity, lists registration candidates with proposed shortcodes
     (dry-run; nothing auto-registers). Builds on phase 1.</div>
   <div class="fieldset">
-    <div class="field"><span class="k">STEP</span><span class="v">write-code</span></div>
+    <div class="field"><span class="k">STEP</span><span class="v">Coding · write-code</span></div>
     <div class="field"><span class="k">ROLE</span><span class="v">write-code</span></div>
     <div class="field"><span class="k">ELAPSED</span><span class="v">14m</span></div>
   </div>
@@ -235,15 +235,15 @@
     <div class="row"><span class="icon">○</span><span class="nid">LC-143</span><span class="label">Project model: github-identity registry (hybrid)</span></div>
     <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.1</span><span class="label">Registry table + identity-based repo resolution + migration (8 steps)</span></div>
     <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.2</span><span class="label">Clone-on-demand: fetch an absent project on resolve (8 steps)</span></div>
-    <div class="row indent1 current"><span class="icon">▸</span><span class="nid">LC-143.3</span><span class="label">lc project scan: recursive discovery by git remote</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.1</span><span class="label">spec-writer</span><span class="role">spec-writer</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.2</span><span class="label">spec-open-pr</span><span class="role">open-pr</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.3</span><span class="label">spec-await-merge</span><span class="role">human</span></div>
-    <div class="row indent1 current"><span class="icon">▸</span><span class="nid">LC-143.3.4</span><span class="label">write-code</span><span class="role">write-code</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.5</span><span class="label">code-open-pr</span><span class="role">open-pr</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.6</span><span class="label">watch-ci</span><span class="role">watch-ci</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.7</span><span class="label">review-code</span><span class="role">review-code</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.8</span><span class="label">code-await-merge</span><span class="role">human</span></div>
+    <div class="row indent1 current"><span class="icon">◆</span><span class="nid">LC-143.3</span><span class="label">lc project scan: recursive discovery by git remote</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.1</span><span class="label">Writing the spec</span><span class="role">spec-writer</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.2</span><span class="label">Opening spec PR</span><span class="role">open-pr</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.3</span><span class="label">Review the spec</span><span class="role">human</span></div>
+    <div class="row indent1 current"><span class="icon">◆</span><span class="nid">LC-143.3.4</span><span class="label">Coding</span><span class="role">write-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.5</span><span class="label">Opening code PR</span><span class="role">open-pr</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.6</span><span class="label">Watching CI</span><span class="role">watch-ci</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.7</span><span class="label">Reviewing code</span><span class="role">review-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.8</span><span class="label">Review the PR</span><span class="role">human</span></div>
     <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.4</span><span class="label">lc project scan detects repo roots, not inside-a-repo (ph3 fix) (8 steps)</span></div>
   </div>
 
@@ -264,7 +264,7 @@
   <div class="meta-row">theme: LC-143 · Project model: github-identity registry (hybrid)</div>
   <div class="meta-row">workflow: lightcycle/spec-driven@88c62c8</div>
   <div class="fieldset">
-    <div class="field"><span class="k">STEP</span><span class="v">code-await-merge</span></div>
+    <div class="field"><span class="k">STEP</span><span class="v">Review the PR · code-await-merge</span></div>
   </div>
   <div class="escalated">
     <div class="tag">⚠ needs you</div>
@@ -314,12 +314,12 @@
   </div>
 
   <div class="body">
-    <div class="row current"><span class="icon">▸</span><span class="nid">LC-72</span><span class="label">Same-item spec-to-build transition — its own root, no theme, so it's the top row here</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.1</span><span class="label">write-code</span><span class="role">write-code</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.2</span><span class="label">open-pr</span><span class="role">open-pr</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.3</span><span class="label">watch-ci</span><span class="role">watch-ci</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.4</span><span class="label">review-code</span><span class="role">review-code</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.5</span><span class="label">await-merge</span><span class="role">human</span></div>
+    <div class="row current"><span class="icon">◆</span><span class="nid">LC-72</span><span class="label">Same-item spec-to-build transition — its own root, no theme, so it's the top row here</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.1</span><span class="label">Coding</span><span class="role">write-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.2</span><span class="label">Opening code PR</span><span class="role">open-pr</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.3</span><span class="label">Watching CI</span><span class="role">watch-ci</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.4</span><span class="label">Reviewing code</span><span class="role">review-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-72.5</span><span class="label">Review the PR</span><span class="role">human</span></div>
   </div>
 
   <div class="pad"></div>
@@ -378,10 +378,10 @@
   </div>
 
   <div class="body">
-    <div class="row current"><span class="icon">▸</span><span class="nid">LC-143</span><span class="label">Project model: github-identity registry (hybrid) — its own root, no parent theme above it</span></div>
+    <div class="row current"><span class="icon">◆</span><span class="nid">LC-143</span><span class="label">Project model: github-identity registry (hybrid) — its own root, no parent theme above it</span></div>
     <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.1</span><span class="label">Registry table + identity-based repo resolution + migration (8 steps)</span></div>
     <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.2</span><span class="label">Clone-on-demand: fetch an absent project on resolve (8 steps)</span></div>
-    <div class="row indent1"><span class="icon">▸</span><span class="nid">LC-143.3</span><span class="label">lc project scan: recursive discovery by git remote (8 steps)</span></div>
+    <div class="row indent1"><span class="icon">◆</span><span class="nid">LC-143.3</span><span class="label">lc project scan: recursive discovery by git remote (8 steps)</span></div>
     <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.4</span><span class="label">lc project scan detects repo roots, not inside-a-repo (ph3 fix) (8 steps)</span></div>
   </div>
 
@@ -402,7 +402,7 @@
   <div class="meta-row">theme: LC-143 · Project model: github-identity registry (hybrid)</div>
   <div class="meta-row">workflow: lightcycle/spec-driven@abfb01d</div>
   <div class="fieldset">
-    <div class="field"><span class="k">STEP</span><span class="v">write-code</span></div>
+    <div class="field"><span class="k">STEP</span><span class="v">Coding · write-code</span></div>
     <div class="field"><span class="k">ROLE</span><span class="v">write-code</span></div>
     <div class="field"><span class="k">ELAPSED</span><span class="v">14m</span></div>
   </div>
@@ -418,11 +418,11 @@
     <div class="pinned-ancestor">
       <span class="icon">○</span><span class="nid">LC-143</span><span class="label">Project model: github-identity registry (hybrid) — scrolled out of normal view, pinned here instead</span>
     </div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.4</span><span class="label">write-code</span><span class="role">write-code</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.5</span><span class="label">code-open-pr</span><span class="role">open-pr</span></div>
-    <div class="row indent1 current"><span class="icon">▸</span><span class="nid">LC-143.3.6</span><span class="label">watch-ci</span><span class="role">watch-ci</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.7</span><span class="label">review-code</span><span class="role">review-code</span></div>
-    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.8</span><span class="label">code-await-merge</span><span class="role">human</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.4</span><span class="label">Coding</span><span class="role">write-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.5</span><span class="label">Opening code PR</span><span class="role">open-pr</span></div>
+    <div class="row indent1 current"><span class="icon">◆</span><span class="nid">LC-143.3.6</span><span class="label">Watching CI</span><span class="role">watch-ci</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.7</span><span class="label">Reviewing code</span><span class="role">review-code</span></div>
+    <div class="row indent1"><span class="icon">○</span><span class="nid">LC-143.3.8</span><span class="label">Review the PR</span><span class="role">human</span></div>
   </div>
 
   <div class="pad"></div>
@@ -442,7 +442,7 @@
   <div class="meta-row">theme: LC-143 · Project model: github-identity registry (hybrid)</div>
   <div class="meta-row">workflow: lightcycle/spec-driven@abfb01d</div>
   <div class="fieldset">
-    <div class="field"><span class="k">STEP</span><span class="v">write-code</span></div>
+    <div class="field"><span class="k">STEP</span><span class="v">Coding · write-code</span></div>
   </div>
 
   <div class="tabs">
@@ -477,7 +477,7 @@
   <div class="meta-row">theme: LC-143 · Project model: github-identity registry (hybrid)</div>
   <div class="meta-row">workflow: lightcycle/spec-driven@abfb01d</div>
   <div class="fieldset">
-    <div class="field"><span class="k">STEP</span><span class="v">write-code</span></div>
+    <div class="field"><span class="k">STEP</span><span class="v">Coding · write-code</span></div>
   </div>
 
   <div class="tabs">

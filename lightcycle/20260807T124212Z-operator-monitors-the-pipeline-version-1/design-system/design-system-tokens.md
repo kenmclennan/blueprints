@@ -31,15 +31,18 @@ For keyboard, focus and interaction conventions (arrows, `Tab`, `Ctrl+U`/`Ctrl+D
 
 ## State to icon/colour mapping
 
-Canonical source: the priority list's row icons (`.icon.attn`, `.icon.dep`, `.icon.active`, `.icon.queued`).
+Two screens map state to an icon, and they do not map the same states. The Priority List distinguishes a gate you can act on from an escalation you must; the Hub does not, because a Hub row is one node whose state is already named in its header.
 
-| State | Icon | Colour token | Notes |
-| --- | --- | --- | --- |
-| Needs-attention | `●` | `--red` |  |
-| Needs-attention, dependency-blocked | `●⛓` | `--red` icon + `--amber` chain-link | Dual icon, not a replacement - the red dot always stays, the amber chain-link is additive |
-| Active | `▸` | `--cyan` |  |
-| Queued | `○` | `--dim` |  |
-| Selection cursor | `❯` | `--cyan` | Row grid's leftmost cell, every list screen |
+| State | Icon | Colour token | Screen | Notes |
+| --- | --- | --- | --- | --- |
+| Gate | `●` | `--amber` | Priority List | Waiting on you, and actionable - a spec or PR to review |
+| Escalation | `▲` | `--red` | Priority List | Stuck, and it cannot proceed until you decide |
+| Needs-attention | `●` | `--red` | Hub | The Hub's single attention state; it draws no gate/escalation distinction |
+| Dependency-blocked | `⛓` | `--amber` | Priority List | Additive - it is appended to the row's own state icon, never a replacement |
+| Active | `◆` | `--cyan` | Both | Animated; the only moving glyph, which is what distinguishes work in progress from work at rest |
+| Queued | `○` | `--dim` | Both | Also the done-glyph on the Hub's hierarchy |
+| Content | `•` | `--cyan` | Hub | The hierarchy's content column - the node has artifacts to view |
+| Selection cursor | `❯` | `--cyan` | Every list screen | Row grid's leftmost cell |
 
 This is the exact table `decomposing-designs`' own "Visual and rendered artifacts" fix required a shared block for, and the one the design packet audit found missing.
 
@@ -93,10 +96,15 @@ Groups within a list (needs-attention / active / queued) are separated by a blan
 | Kind | Columns | Width | Overflow |
 | --- | --- | --- | --- |
 | **Glyph** | cursor, icon, content | Fixed - 2ch, 4ch, 2ch | Cannot overflow |
-| **Atomic** | id, project, step, role, type, time | The longest value in the list, recomputed each tick | Never - see The breakpoint |
+| **Atomic** | id, project, role, type, time | The longest value in the list, recomputed each tick | Never - see The breakpoint |
+| **Label** | step | The longest value in the list, recomputed each tick | Ellipsizes - it is prose, not an identifier |
 | **Flexible** | title, value | The remaining budget, never below 24ch | Wraps |
 
 **An atomic cell is never truncated and never wrapped.** These are identifiers, and a cut identifier is worse than a wide column: `LC-1234.10` truncated to `LC-1234.1` is not a visibly-cut fragment, it is a complete-looking id that belongs to a different node. An ellipsis does not rescue it either - `LIGHTCYCLE-3.1` and `LIGHTCYCLE-3.1.1` both render as `LIGHTCYCLE-3…`, so two distinct nodes still read identically. Nor can a wider fixed width fix it, because a project's shortcode is unbounded by construction: the engine defaults it to the uppercased repo name, so `LIGHTCYCLE-3.1.1` is a legitimate sixteen-character id and any constant only moves the cliff.
+
+**The `step` column is a label, not an identifier.** It holds a phrase describing what the stage is - "Review the PR", "Coding", "Watching CI" - chosen by the workflow that owns the stage, not the stage's own name. That is why it sits outside the atomic class despite sizing the same way. The atomic no-truncate rule exists because a cut identifier is a valid-looking different identifier; a cut phrase is merely ugly, so `step` may ellipsize at the grid's floor where an id may not.
+
+**A phrase is budgeted at 19 characters.** That is the width of the longest stage name a workflow can currently produce, so a bundle that stays inside it leaves every grid exactly as wide as it would have been showing raw stage names. A phrase is the row's whole account of the stage: the identifier is not shown beside it, because the row's id column is the handle anyone actually uses and the identifier is one level down, in the Hub's step field.
 
 **Atomic widths are measured across the whole list, not the visible window.** Sizing to the rows currently on screen makes columns change width as the operator scrolls, and a grid that shifts under the eye is harder to read than one that is merely wide. Measuring the whole list means a column moves only when the data moves, which the poll tick already bounds.
 
@@ -134,7 +142,7 @@ The prose therefore gets the row budget less that small indent, and the 24ch fle
 #### Priority List
 
 ```
-❯ ●  LC-290.1.90  lightcycle  code-review-rounds                14m
+❯ ●  LC-290.1.90  lightcycle  Review scenarios                  14m
       Deliver the operator-monitors-the-pipeline Blueprint
 ```
 
